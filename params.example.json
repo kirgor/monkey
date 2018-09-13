@@ -1,0 +1,10 @@
+{
+  "jiraUrl": "",
+  "localRepoPath": "",
+  "jiraProject": "",
+  "githubRepoAccount": "",
+  "githubRepo": "",
+  "fromCommit": "",
+  "toCommit": "",
+  "auth": ""
+}
