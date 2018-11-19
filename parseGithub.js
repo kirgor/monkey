@@ -11,10 +11,15 @@ function parseGithub({
     auth
 }) {
     return new Promise(resolve => {
-        const gitLogProcess = spawnSync(`git log ${fromCommit}..${toCommit} --oneline`, {
+        const gitLogProcess = spawnSync(`git log ${fromCommit}..${toCommit} --oneline --first-parent`, {
             shell: true,
             cwd: localRepoPath
         })
+
+        let issues = {}
+        let pullRequestInfos = []
+        let nonPullRequestInfos = []
+        let processedCount = 0
 
         const regexp = /Merge pull request \#([0-9]+).*/
         const pulls = []
@@ -22,13 +27,10 @@ function parseGithub({
             const match = regexp.exec(line)
             if (match) {
                 pulls.push(parseInt(match[1]))
+            } else if (line) {
+                nonPullRequestInfos.push(line)
             }
         })
-
-        let issues = {}
-        let processedCount = 0
-
-        let pullRequestInfos = []
 
         pulls.forEach(pull => {
             https.get({
@@ -67,6 +69,7 @@ function parseGithub({
                     if (processedCount === pulls.length) {
                         resolve({
                             pullRequestInfos,
+                            nonPullRequestInfos,
                             issues: Object.keys(issues)
                         })
                     }

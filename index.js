@@ -1,8 +1,11 @@
 const parseGithub = require('./parseGithub')
 const params = require('./params')
+const authParams = require('./auth')
 
-parseGithub(params).then(result => {
-    const {jiraUrl, githubRepoAccount, githubRepo} = params
+const combinedParams = {...params, ...authParams}
+
+parseGithub(combinedParams).then(result => {
+    const {jiraUrl, githubRepoAccount, githubRepo} = combinedParams
 
     console.log()
 
@@ -13,4 +16,9 @@ parseGithub(params).then(result => {
 
     console.log('Pull requests without linked issues:')
     console.log(result.pullRequestInfos.filter(p => p.issues.length === 0).map(p => `https://github.com/${githubRepoAccount}/${githubRepo}/pull/${p.id} - ${p.title}`))
+
+    console.log()
+
+    console.log('Non-pull requests:')
+    console.log(result.nonPullRequestInfos)
 })
