@@ -1,0 +1,13 @@
+extends master
+
+block content
+    +form(config, '/config', {
+        port: 'Server port',
+        jiraUrl: 'Jira URL',
+        jiraProject: 'Jira project',
+        localRepoPath: 'Local repo path',
+        githubRepo: 'Github repo',
+        githubAccount: 'Github account',
+        githubPassword: 'Github password',
+        submit: 'Save'
+    })

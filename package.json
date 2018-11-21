@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "start": "node app/app.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kirgor/jira-helper.git"
@@ -12,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/kirgor/jira-helper/issues"
   },
-  "homepage": "https://github.com/kirgor/jira-helper#readme"
+  "homepage": "https://github.com/kirgor/jira-helper#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "pug": "^2.0.3"
+  }
 }

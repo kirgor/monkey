@@ -1,14 +1,14 @@
 const https = require('https')
 const {spawnSync} = require('child_process')
 
-function parseGithub({
+function parseGitLog({
     localRepoPath,
     jiraProject,
-    githubRepoAccount,
     githubRepo,
+    githubAccount,
+    githubPassword,
     fromCommit,
-    toCommit,
-    auth
+    toCommit
 }) {
     return new Promise(resolve => {
         const gitLogProcess = spawnSync(`git log ${fromCommit}..${toCommit} --oneline --first-parent`, {
@@ -35,12 +35,12 @@ function parseGithub({
         pulls.forEach(pull => {
             https.get({
                 hostname: 'api.github.com',
-                path: `/repos/${githubRepoAccount}/${githubRepo}/pulls/${pull}`,
+                path: `/repos/${githubRepo}/pulls/${pull}`,
                 method: 'GET',
                 headers: {
                     'User-Agent': 'Jira Helper 1.0.0'
                 },
-                auth
+                auth: `${githubAccount}:${githubPassword}`
             }, (res) => {
                 let data = ''
                 res.on('data', (chunk) => {
@@ -79,4 +79,4 @@ function parseGithub({
     })
 }
 
-module.exports = parseGithub
+module.exports = parseGitLog

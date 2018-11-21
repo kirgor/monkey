@@ -1,0 +1,13 @@
+include mixins
+
+html
+    head
+        title Jira helper - #{title}
+        link(rel='stylesheet', href='/public/app.css')
+    body
+        nav
+            div(class='title') #{title}
+            div(class='links')
+                a(href='/gitlog') Gitlog
+                a(href='/config') Config
+        block content

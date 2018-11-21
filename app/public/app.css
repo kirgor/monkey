@@ -1,0 +1,67 @@
+body {
+    font-family: Helvetica, serif;
+    width: 80%;
+    margin: 0 auto;
+}
+
+a {
+    color: #0366d6;
+    text-decoration: none;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    margin-bottom: 30px;
+    padding-left: 40px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+nav .title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+nav .links a {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+input[type='submit'] {
+    margin-top: 10px;
+    float: right;
+    padding: 5px 10px;
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+}
+
+input[type='text'], input[type='password'] {
+    width: 200px;
+}
+
+.ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.configBlock {
+    display: inline-block;
+    padding: 20px;
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px 3px 0 0;
+}
+
+.configLine {
+    display: flex;
+    height: 20px;
+    margin-bottom: 5px;
+}
+
+.configLine .key {
+    width: 200px;
+}
