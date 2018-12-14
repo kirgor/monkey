@@ -1,0 +1,59 @@
+extends master
+
+block content
+    div(class='configBlock')
+        form(action='/githubReport', method='POST')
+            div(class='configLine')
+                div(class='key') Report profile
+                select(name='reportProfileKey')
+                    each key in reportProfileKeys
+                        option(value=key, selected=(key === reportProfileKey)) #{key}
+            div(class='configLine')
+                div(class='key') From commit
+                input(name='fromCommit', value=fromCommit, type='text')
+            div(class='configLine')
+                div(class='key') To commit
+                input(name='toCommit', value=toCommit, type='text')
+            input(type='submit', value='Report')
+
+    if (error)
+        div(class='error') ERROR: #{error}
+
+    if (report)
+        div(class='githubReport')
+            p
+                b Report:
+
+            if (report.pullRequests.length === 0 && report.nonPullRequests.length === 0)
+                p Nothing found
+
+            each groupedIssuesItem in report.groupedIssues
+                if (groupedIssuesItem.issues.length > 0)
+                    p
+                        b #{groupedIssuesItem.issues.length} issue(s) from #{groupedIssuesItem.issueTrackerName}:
+                    if (groupedIssuesItem.issues.length > 1 && groupedIssuesItem.combinedUrl)
+                        div(class='ellipsis')
+                            a(target='_blank', href=groupedIssuesItem.combinedUrl) Combined link
+                    ul
+                    each issue in groupedIssuesItem.issues
+                        li(class='ellipsis')
+                            a(target='_blank', href=issue.url) #{issue.id} - #{issue.name}
+
+            -const pullRequestsWithNoIssues = report.pullRequests.filter(pr => !pr.hasIssues)
+            if (pullRequestsWithNoIssues.length > 0)
+                p
+                    b #{pullRequestsWithNoIssues.length} PR(s) without issues:
+                ul
+                each pr in report.pullRequests
+                    if (!pr.hasIssues)
+                        li(class='ellipsis')
+                            a(target='_blank', href=pr.url) ##{pr.id} - #{pr.title}
+
+            if (report.nonPullRequests.length > 0)
+                p
+                    b #{report.nonPullRequests.length} non-PR(s):
+                ul
+                each npr in report.nonPullRequests
+                    li(class='ellipsis') #{npr}
+
+            p &nbsp;

@@ -1,9 +1,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
+const githubReport = require('./githubReport')
 
-const {getConfig, setConfig} = require('./config')
-const parseGitLog = require('./parseGitLog')
+let config
+try {
+    config = require('./config')
+} catch (e) {
+    console.error('Cannot load GitHub Report profiles. Make sure you have "config.js" file.')
+    process.exit(1)
+}
 
 const app = express()
 
@@ -14,46 +20,43 @@ app.use('/public', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.get('/', (req, res) => {
-    res.redirect('/gitlog')
+    res.redirect('/githubReport')
 })
 
-app.use('/gitlog', (req, res) => {
-    if (req.body.fromCommit && req.body.toCommit) {
-        const config = getConfig()
-        parseGitLog({
-            ...config,
-            fromCommit: req.body.fromCommit,
-            toCommit: req.body.toCommit
-        }).then(report => {
-            res.render('gitlog', {
-                title: 'Git log',
+app.use('/githubReport', async (req, res) => {
+    if (req.body.reportProfileKey && req.body.fromCommit && req.body.toCommit) {
+        try {
+            const reportProfile = config.githubReportProfiles[req.body.reportProfileKey]
+
+            const report = await githubReport({
+                ...reportProfile,
+                reportProfileKey: req.body.reportProfileKey,
                 fromCommit: req.body.fromCommit,
                 toCommit: req.body.toCommit,
-                report: {
-                    issues: report.issues,
-                    pullRequestInfosWithoutIssues: report.pullRequestInfos.filter(p => p.issues.length === 0),
-                    nonPullRequestInfos: report.nonPullRequestInfos
-                },
-                config
             })
-        })
+
+            res.render('githubReport', {
+                title: 'GitHub Report',
+                reportProfileKeys: Object.keys(config.githubReportProfiles),
+                reportProfileKey: req.body.reportProfileKey,
+                fromCommit: req.body.fromCommit,
+                toCommit: req.body.toCommit,
+                report,
+                reportProfile,
+            })
+        } catch (error) {
+            res.render('githubReport', {
+                title: 'GitHub Report',
+                reportProfileKeys: Object.keys(config.githubReportProfiles),
+                error,
+            })
+        }
     } else {
-        res.render('gitlog', {
-            title: 'Git log'
+        res.render('githubReport', {
+            title: 'GitHub Report',
+            reportProfileKeys: Object.keys(config.githubReportProfiles),
         })
     }
 })
 
-app.use('/config', (req, res) => {
-    if (req.method === 'POST') {
-        setConfig(req.body)
-    }
-
-    res.render('config', {
-        title: 'Config',
-        config: getConfig()
-    })
-})
-
-const {port} = getConfig()
-app.listen(port, () => console.log(`Application started on port ${port}`))
+app.listen(config.port, () => console.log(`Application started on port ${config.port}`))

@@ -1,5 +1,3 @@
-include mixins
-
 html
     head
         title Jira helper - #{title}
@@ -8,6 +6,5 @@ html
         nav
             div(class='title') #{title}
             div(class='links')
-                a(href='/gitlog') Gitlog
-                a(href='/config') Config
+                a(href='/githubReport') GitHub Report
         block content

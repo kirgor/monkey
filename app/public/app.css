@@ -38,7 +38,7 @@ input[type='submit'] {
     color: #fff;
 }
 
-input[type='text'], input[type='password'] {
+input[type='text'], select {
     width: 200px;
 }
 
@@ -46,6 +46,7 @@ input[type='text'], input[type='password'] {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    margin-top: 3px;
 }
 
 .configBlock {
