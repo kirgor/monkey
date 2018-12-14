@@ -15,7 +15,7 @@ function fetchJson({
             path,
             method: 'GET',
             headers: {
-                'User-Agent': 'Team Lead Helper 1.0.0',
+                'User-Agent': 'Monkey 1.0.0',
             },
             auth,
             rejectUnauthorized: false,
