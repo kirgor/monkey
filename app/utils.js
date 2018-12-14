@@ -1,5 +1,9 @@
 const https = require('https')
 
+function parseJiraLikeIds(projectIds, text) {
+    return text.match(new RegExp(`(${projectIds.join('|')})-[0-9]+`, 'g')) || []
+}
+
 function fetchJson({
     hostname,
     path,
@@ -24,5 +28,6 @@ function fetchJson({
 }
 
 module.exports = {
+    parseJiraLikeIds,
     fetchJson,
 }

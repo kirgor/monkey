@@ -1,17 +1,17 @@
 const IssueTracker = require('./IssueTracker')
-const {fetchJson} = require('../utils')
+const {parseJiraLikeIds, fetchJson} = require('../utils')
 
 class AhaIssueTracker extends IssueTracker {
     constructor({
         subdomain,
-        projectId,
+        projectIds,
         account,
         password,
     }) {
         super()
 
         this.subdomain = subdomain
-        this.projectId = projectId
+        this.projectIds = projectIds
         this.account = account
         this.password = password
     }
@@ -21,7 +21,7 @@ class AhaIssueTracker extends IssueTracker {
     }
 
     parseIssueIds(text) {
-        return text.match(new RegExp(`${this.projectId}-[0-9]+`, 'g')) || []
+        return parseJiraLikeIds(this.projectIds, text)
     }
 
     makeIssueUrl(id) {
