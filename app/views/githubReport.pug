@@ -56,4 +56,11 @@ block content
                 each npr in report.nonPullRequests
                     li(class='ellipsis') #{npr}
 
+            if (report.criticalChanges.length > 0)
+                p
+                    b Critical changes:
+                ul
+                each cc in report.criticalChanges
+                    li(class='ellipsis') #{cc}
+
             p &nbsp;

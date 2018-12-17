@@ -9,11 +9,19 @@ async function githubReport({
     githubAccount,
     githubPassword,
     issueTrackers,
+    criticalChangesRegexps,
 }) {
-    const {pullRequestIds, nonPullRequests} = parseLog({
+    const {pullRequestIds, nonPullRequests} = parsePullRequests({
         localRepoPath,
         fromCommit,
         toCommit,
+    })
+
+    const criticalChanges = parseCriticalChanges({
+        localRepoPath,
+        fromCommit,
+        toCommit,
+        criticalChangesRegexps,
     })
 
     const pullRequests = await Promise.all(pullRequestIds.map(id => fetchPullRequest({
@@ -51,10 +59,11 @@ async function githubReport({
         pullRequests,
         nonPullRequests,
         groupedIssues,
+        criticalChanges,
     }
 }
 
-function parseLog({
+function parsePullRequests({
     localRepoPath,
     fromCommit,
     toCommit,
@@ -80,6 +89,30 @@ function parseLog({
         pullRequestIds,
         nonPullRequests,
     }
+}
+
+function parseCriticalChanges({
+    localRepoPath,
+    fromCommit,
+    toCommit,
+    criticalChangesRegexps,
+}) {
+    const gitDiffProcess = spawnSync(`git diff ${fromCommit}..${toCommit} --name-only`, {
+        shell: true,
+        cwd: localRepoPath,
+    })
+
+    const criticalChanges = new Set()
+    gitDiffProcess.stdout.toString().split('\n').forEach(line => {
+        for (let regexp of criticalChangesRegexps) {
+            if (line.match(regexp)) {
+                criticalChanges.add(line)
+                break
+            }
+        }
+    })
+
+    return [...criticalChanges]
 }
 
 async function fetchPullRequest({
