@@ -1,5 +1,5 @@
 {
-  "name": "jira-helper",
+  "name": "@kirgor/monkey",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kirgor/jira-helper.git"
+    "url": "git+https://github.com/kirgor/monkey.git"
   },
   "author": "Kirill Gorobets",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kirgor/jira-helper/issues"
+    "url": "https://github.com/kirgor/monkey/issues"
   },
-  "homepage": "https://github.com/kirgor/jira-helper#readme",
+  "homepage": "https://github.com/kirgor/monkey#readme",
   "dependencies": {
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
