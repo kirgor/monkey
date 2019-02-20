@@ -5,6 +5,7 @@ async function githubReport({
     localRepoPath,
     fromCommit,
     toCommit,
+    fetchBeforeReport,
     githubRepo,
     githubAccount,
     githubPassword,
@@ -15,6 +16,7 @@ async function githubReport({
         localRepoPath,
         fromCommit,
         toCommit,
+        fetchBeforeReport,
     })
 
     const criticalChanges = parseCriticalChanges({
@@ -67,7 +69,15 @@ function parsePullRequests({
     localRepoPath,
     fromCommit,
     toCommit,
+    fetchBeforeReport,
 }) {
+    if (fetchBeforeReport) {
+        spawnSync('git fetch --tags', {
+            shell: true,
+            cwd: localRepoPath,
+        })
+    }
+
     const gitLogProcess = spawnSync(`git log ${fromCommit}..${toCommit} --oneline --first-parent`, {
         shell: true,
         cwd: localRepoPath,
